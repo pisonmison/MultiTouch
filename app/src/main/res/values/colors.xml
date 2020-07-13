@@ -8,4 +8,16 @@
     <color name="multitouch_red">#e61610</color>
 
     <color name="multitouch_yellow">#f4eb49</color>
+
+    <color name="multitouch_grey">#232323</color>
+
+
+
+
+
+    <color name="sw_red_bright_1">#ff3823</color>
+
+    <color name="sw_red_bright_2">#ff5d55</color>
+
+    <color name="sw_red_bright_3">#ff8a84</color>
 </resources>

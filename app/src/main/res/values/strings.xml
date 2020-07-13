@@ -5,8 +5,8 @@
     <string name="playgame"> Play  !</string>
 
     <string name="touchpoints"> Touch-Points:</string>
-    <string name="currentpressure"> Current Pressure:</string>
-    <string name="currentposition"> Current Position</string>
+    <string name="currentpressure"> Latest Pressure:</string>
+    <string name="currentposition"> Latest Position</string>
 
     <string name="clearscreen"> Clear Screen!</string>
 </resources>
