@@ -7,10 +7,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -40,11 +37,14 @@ public class CustomCircleView extends View {
 
     private Paint shockWavePaint;
 
+    private Paint textPaint;
+
 
 
 
     private ArrayList<Point> circleList = new ArrayList<Point>();
     private ArrayList<Point> shockWaveList = new ArrayList<Point>();
+    private ArrayList<CustomText> textList = new ArrayList<CustomText>();
 
 
 
@@ -130,7 +130,70 @@ public class CustomCircleView extends View {
 
     }
 
+    public class CustomText{
 
+        private String text ="";
+    private int id;
+    private float x;
+    private float y;
+
+    public boolean isAble2ShowText() {
+        return able2ShowText;
+    }
+
+    public void setAble2ShowText(boolean able2ShowText) {
+        this.able2ShowText = able2ShowText;
+    }
+
+    private boolean able2ShowText = false;
+
+
+        public CustomText(){
+
+         }
+
+     public void setAllInfo(String text, int id, float x, int y){
+            this.text = text;
+            this.id = id;
+            this.x = x;
+            this.y = y;
+     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+
+
+}
 
 
 
@@ -175,6 +238,13 @@ public class CustomCircleView extends View {
         shockWavePaint.setStyle(Paint.Style.STROKE);
         shockWavePaint.setColor(getResources().getColor(R.color.multitouch_yellow));
 
+        textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(40);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+
+
+
 
     }
 
@@ -182,6 +252,8 @@ public class CustomCircleView extends View {
         if(!circleList.isEmpty() && !shockWaveList.isEmpty()){
             circleList.clear();
             shockWaveList.clear();
+            textList.clear();
+
             able2Draw = false;
             mHandler.removeCallbacksAndMessages(null); //stop all handlers.
             postInvalidate();
@@ -253,6 +325,7 @@ public class CustomCircleView extends View {
                 decreasePoints();
                 increasShockWaveAnimation();
                 decreasShockWaveAnimation();
+                testText();
 
 
             }
@@ -269,8 +342,67 @@ public class CustomCircleView extends View {
 }
 
 
+    /**
+     * draws a text inside the circle, when circle reaches a big enough radius.
+     * If circle shrinks, text disspears. Text indicates the current numbered touchpoint.
+     * -> 1 finger touches -> one circle with text "1" insie it.
+     * -> 3 fingers touch -> 3 circles with 1 to 3 text inside, depending on order touched.
+     *
+     */
+    public void setTextInsideCircles(){
+
+        Iterator<CustomText> it = textList.iterator();
+
+                while(it.hasNext()) {
+                    CustomText ct = it.next();
+                    for (Point p : circleList) {
+                        int rad = p.getRadius();
+                        if (rad > 80) {
 
 
+                        } else {
+                            //it.remove();
+                        }
+
+                    }
+
+                }
+}
+
+public void testText() {
+    for (Point p : circleList) {
+        Iterator<CustomText> it = textList.iterator();
+        int rad = p.getRadius();
+
+        while (it.hasNext()) {
+            CustomText ct = it.next();
+            if (ct.getId() == p.getId()) {
+                if (rad > 80) {
+                    ct.setAble2ShowText(true);
+
+                } else {
+                    ct.setAble2ShowText(false);
+
+                }
+
+            }
+
+        }
+    }
+}
+
+
+
+
+
+public void drawTexts(Canvas canvas){
+        for(CustomText ct : textList){
+            if(ct.isAble2ShowText()){
+                canvas.drawText(ct.getText(), ct.getX(), ct.getY(), textPaint);
+            }
+        }
+
+}
 
 
     /**
@@ -306,11 +438,20 @@ public class CustomCircleView extends View {
      * @param x changed from currentXPos/currentYpos
      * @param y changed from currentXPos/currentYpos
      */
-    public void createCircle(float x, float y){
+    public void createCircle(float x, float y, int id){
         Point p = new Point();
         p.setxPos(x);
         p.setyPos(y);
+        p.setId(id);
         circleList.add(p);
+
+        CustomText ct = new CustomText();
+        ct.setId(id);
+        ct.setText(String.valueOf(id));
+        ct.setX(x);
+        ct.setY(y);
+        textList.add(ct);
+
 
     }
 
@@ -334,6 +475,8 @@ public class CustomCircleView extends View {
         }
         postInvalidate();
     }
+
+
 
 
 
@@ -417,6 +560,7 @@ public class CustomCircleView extends View {
 
             drawShockwaves(canvas);
             drawCircles(canvas);
+            drawTexts(canvas);
         }
 
 

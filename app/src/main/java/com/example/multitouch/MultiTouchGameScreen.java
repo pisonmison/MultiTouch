@@ -79,7 +79,7 @@ public class MultiTouchGameScreen extends AppCompatActivity implements Button.On
                 touchPressureView.setText("");
 
 
-        }
+        }  
 
     }
 
@@ -108,7 +108,7 @@ public class MultiTouchGameScreen extends AppCompatActivity implements Button.On
         touchFrame.setAble2Draw(true);
 
         String coordinates = "[" + (int) tempx + "/" + (int) tempy + "]";
-        numberofPoints++;
+
 
        float temppressure = roundFloat(pressure,3);
 
@@ -120,7 +120,8 @@ public class MultiTouchGameScreen extends AppCompatActivity implements Button.On
 
         //set the info needed for circle and create one afterwards.
 
-        touchFrame.createCircle(tempx,tempy);
+        touchFrame.createCircle(tempx,tempy, numberofPoints);
+        numberofPoints++;
         //touchFrame.scaleWithHandler();
         touchFrame.scaleCircles();
         touchFrame.refreshScreen();
